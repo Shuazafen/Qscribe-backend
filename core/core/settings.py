@@ -52,6 +52,10 @@ INSTALLED_APPS = [
     'app.habits',
     'app.notifications',
     'app.transactions',
+    'app.webhooks',
+    'app.pets',
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +76,7 @@ ROOT_URLCONF = 'core.core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR.parent / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,6 +98,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'qscribe_db',
+        # 'USER': 'postgres',
+        # 'PASSWORD': 'your_password',
+        # 'HOST': 'localhost',
+        # 'PORT': '5432',
     }
 }
 
@@ -134,16 +144,23 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR.parent / "static",
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR.parent / 'media'
+
 
 
 UNFOLD = {
-    "SITE_TITLE": "Custom suffix in <title> tag",
-    "SITE_HEADER": "Appears in sidebar at the top",
-    "SITE_SUBHEADER": "Appears under SITE_HEADER",
+    "SITE_TITLE": "Qscribe Admin",
+    "SITE_HEADER": "Qscribe",
+    "SITE_SUBHEADER": "Finance & Productivity Platform",
     "SITE_DROPDOWN": [
         {
-            "icon": "diamond",
-            "title": _("My site"),
+            "icon": "home",
+            "title": _("Qscribe"),
             "link": "https://example.com",
         },
         # ...
@@ -173,7 +190,8 @@ UNFOLD = {
     "SHOW_BACK_BUTTON": False, # show/hide "Back" button on changeform in header, default: False
     # "ENVIRONMENT": "sample_app.environment_callback", # environment name in header
     # "ENVIRONMENT_TITLE_PREFIX": "sample_app.environment_title_prefix_callback", # environment name prefix in title tag
-    # "DASHBOARD_CALLBACK": "sample_app.dashboard_callback",
+    "DASHBOARD_CALLBACK": "core.core.dashboard.dashboard_callback",
+    "DASHBOARD_TEMPLATE": "admin/index.html",
     "THEME": "dark", # Force theme: "dark" or "light". Will disable theme switcher
     "LOGIN": {
         "image": lambda request: static("sample/login-bg.jpg"),
@@ -234,32 +252,120 @@ UNFOLD = {
         },
     },
     "SIDEBAR": {
-        "show_search": True,  # Search in applications and models names
-        "command_search": True,  # Replace the sidebar search with the command search
-        "show_all_applications": True,  # Dropdown with all applications and models
-        # "navigation": [
-        #     {
-        #         "title": _("Navigation"),
-        #         "separator": True,  # Top border
-        #         "collapsible": True,  # Collapsible group of links
-        #         "items": [
-        #             {
-        #                 "title": _("Dashboard"),
-        #                 "icon": "dashboard",  # Supported icon set: https://fonts.google.com/icons
-        #                 "link": reverse_lazy("admin:index"),
-        #                 "badge": "sample_app.badge_callback",
-        #                 "badge_variant": "info", # info, success, warning, primary, danger
-        #                 "badge_style": "solid", # background fill style
-        #                 "permission": lambda request: request.user.is_superuser,
-        #             },
-        #             {
-        #                 "title": _("Users"),
-        #                 "icon": "people",
-        #                 "link": reverse_lazy("admin:auth_user_changelist"),
-        #             },
-        #         ],
-        #     },
-        # ],
+        "show_search": True,
+        "command_search": True,
+        "show_all_applications": True,
+        "navigation": [
+            {
+                "title": _("Dashboard"),
+                "separator": True,
+                "items": [
+                    {
+                        "title": _("Home"),
+                        "icon": "dashboard",
+                        "link": reverse_lazy("admin:index"),
+                    },
+                ],
+            },
+            {
+                "title": _("User Management"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Users"),
+                        "icon": "people",
+                        "link": reverse_lazy("admin:users_user_changelist"),
+                    },
+                    {
+                        "title": _("Groups"),
+                        "icon": "group",
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Finance"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Transactions"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:transactions_transaction_changelist"),
+                    },
+                    {
+                        "title": _("Savings"),
+                        "icon": "savings",
+                        "link": reverse_lazy("admin:savings_saving_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Productivity"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Habits"),
+                        "icon": "task_alt",
+                        "link": reverse_lazy("admin:habits_habit_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("System & Monitoring"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Notifications"),
+                        "icon": "notifications",
+                        "link": reverse_lazy("admin:notifications_notification_changelist"),
+                    },
+                    {
+                        "title": _("Webhooks"),
+                        "icon": "webhook",
+                        "link": reverse_lazy("admin:webhooks_webhook_changelist"),
+                    },
+                    {
+                        "title": _("Celery Results"),
+                        "icon": "schedule",
+                        "link": reverse_lazy("admin:django_celery_results_taskresult_changelist"),
+                    },
+                ],
+            },
+        ],
     },
    
+}
+
+# Celery Configuration Options
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+
+# ──────────────────────────────────────────────
+# Tier Permission Settings
+# ──────────────────────────────────────────────
+
+# Maximum deposit amount (in Naira) for Tier 2 users per transaction.
+# Tier 3 users have no cap (limitless deposits).
+TIER2_MAX_DEPOSIT_AMOUNT = 300_000
+
+# Monthly interest rate (%) automatically applied to Tier 3 users' saving goals.
+TIER3_SAVING_INTEREST_RATE = 3.0
+
+# Celery Beat schedule for applying Tier 3 savings interest monthly
+from celery.schedules import crontab
+CELERY_BEAT_SCHEDULE = {
+    'apply-tier3-interest-monthly': {
+        'task': 'app.savings.tasks.apply_tier3_interest',
+        # Runs on the 1st of every month at midnight
+        'schedule': crontab(hour=0, minute=0, day_of_month=1),
+    },
 }
