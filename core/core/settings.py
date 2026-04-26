@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # installed apps
     'rest_framework',
+    'rest_framework_simplejwt',
     'drf_yasg',
     # created apps
     'app.users',
@@ -69,6 +70,19 @@ MIDDLEWARE = [
 ]
 
 AUTH_USER_MODEL = 'users.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 
 ROOT_URLCONF = 'core.core.urls'
@@ -161,7 +175,7 @@ UNFOLD = {
         {
             "icon": "home",
             "title": _("Qscribe"),
-            "link": "https://example.com",
+            "link": "http://127.0.0.1:8000",
         },
         # ...
     ],

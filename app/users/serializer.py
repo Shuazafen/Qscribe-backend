@@ -33,3 +33,23 @@ class UserSerializer(serializers.ModelSerializer):
             
         instance.save()
         return instance
+
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'email', 'first_name', 'last_name', 'phone_number', 'university', 'id_card_image')
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        user.tier = 1  # Ensure new users start at Tier 1
+        user.save()
+        return user
+
+
+class LoginSerializer(serializers.Serializer):
+    "serializer for user login"
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)

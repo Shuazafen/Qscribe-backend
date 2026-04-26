@@ -12,7 +12,9 @@ Qscribe-backend/
 │   ├── savings/
 │   ├── habits/
 │   ├── notifications/
-│   └── transactions/
+│   ├── transactions/
+|   ├── webhooks/
+|   └── pets/
 ├── core/
 ├── config/
 ├── requirements.txt
@@ -33,3 +35,6 @@ there will different stages of user verification
 6. nin verification
 
 end of first input 
+
+second input 
+introduction to tier list and permission, restructure of savings and transactions app 
