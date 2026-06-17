@@ -8,7 +8,7 @@ const Header = () => {
         <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border py-4 xl:py-6 transition-all">
             <div className="container mx-auto px-4 flex justify-between items-center">
 
-            <Link href={"/"} className="font-bold text-3xl tracking-tight flex items-center gap-2 text-primary hover:opacity-80 transition-opacity">
+            <Link href={"/"} className="font-bold text-2xl tracking-tight flex items-center gap-2 text-primary hover:opacity-80 transition-opacity">
             QSCRIBE
             </Link>
 

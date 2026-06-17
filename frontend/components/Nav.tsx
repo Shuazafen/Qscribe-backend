@@ -18,10 +18,7 @@ const links = [
     {
         name: "Resources",
         path: "/resources",
-        sublinks: [
-            { name: "Blog", path: "/blog", desc: "Latest news & stories" },
-            { name: "Help Center", path: "/help", desc: "Tutorials & guides" },
-        ]
+        
     },
     {
         name: "About",
@@ -61,15 +58,15 @@ const productMegaMenu = {
                 { name: "Admin and security", path: "/solutions/security" },
             ]
         },
-        {
-            title: "Qscribe AI",
-            links: [
-                { name: "Qscribe AI", path: "/ai" },
-                { name: "AI Studio", path: "/ai/studio" },
-                { name: "AI Teammates", path: "/ai/teammates" },
-                { name: "Smart assists", path: "/ai/assists" },
-            ]
-        }
+        // {
+        //     title: "Qscribe AI",
+        //     links: [
+        //         { name: "Qscribe AI", path: "/ai" },
+        //         { name: "AI Studio", path: "/ai/studio" },
+        //         { name: "AI Teammates", path: "/ai/teammates" },
+        //         { name: "Smart assists", path: "/ai/assists" },
+        //     ]
+        // }
     ],
     plans: {
         title: "Plans",
@@ -135,26 +132,30 @@ const Nav = () => {
                    return (
                        <div key={index} className="group py-4">
                            <Link 
-                               href={link.path} 
-                               className={`capitalize font-medium transition-all duration-300 hover:text-primary flex items-center gap-1 relative ${isActive ? "text-primary font-semibold" : "text-muted-foreground"}`}
-                           >
-                               {link.name}
-                               {link.hasMega && (
-                                   <ChevronDown size={14} className="transition-transform duration-300 group-hover:rotate-180" />
-                               )}
-                               <span className={`absolute -bottom-1 left-0 h-[2px] bg-primary transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"}`}></span>
-                           </Link>
+                                href={link.path} 
+                                style={isActive ? { color: 'var(--tertiary)' } : undefined}
+                                className={`capitalize font-medium transition-all duration-300 flex items-center gap-1 relative ${isActive ? "font-semibold" : "text-muted-foreground hover:text-[var(--tertiary)]"}`}
+                            >
+                                {link.name}
+                                {link.hasMega && (
+                                    <ChevronDown size={14} className="transition-transform duration-300 group-hover:rotate-180" />
+                                )}
+                                <span
+                                    style={{ backgroundColor: 'var(--tertiary)' }}
+                                    className={`absolute -bottom-1 left-0 h-[2px] transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"}`}
+                                ></span>
+                            </Link>
                            
                            {/* Mega Dropdown Menu */}
                            {link.hasMega && megaMenu && (
-                               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[900px] bg-white border border-gray-100 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-50 overflow-hidden flex flex-col">
+                               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[900px] bg-popover border border-border rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-50 overflow-hidden flex flex-col">
                                    {/* Main content grid */}
                                    <div className="grid grid-cols-4 p-8 gap-8">
                                        {/* Columns 1-3 */}
                                        <div className="col-span-3 grid grid-cols-3 gap-8">
                                            {megaMenu.columns.map((col, cIdx) => (
                                                <div key={cIdx} className="flex flex-col gap-4">
-                                                   <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400 pb-2 border-b border-gray-50">
+                                                   <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground/60 pb-2 border-b border-border/40">
                                                        {col.title}
                                                    </h4>
                                                    <div className="flex flex-col gap-3">
@@ -162,7 +163,7 @@ const Nav = () => {
                                                            <Link 
                                                                 key={sIdx} 
                                                                 href={sublink.path}
-                                                                className="text-sm font-medium text-gray-700 hover:text-primary transition-colors hover:underline underline-offset-4"
+                                                                className="text-sm font-medium text-foreground/80 hover:text-[var(--tertiary)] transition-colors hover:underline underline-offset-4"
                                                             >
                                                                {sublink.name}
                                                            </Link>
@@ -173,8 +174,8 @@ const Nav = () => {
                                        </div>
 
                                        {/* Rightmost column (Plans / Right Special Panel) */}
-                                       <div className="col-span-1 border-l border-gray-100 pl-8 flex flex-col gap-4">
-                                           <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400 pb-2 border-b border-gray-50">
+                                       <div className="col-span-1 border-l border-border/40 pl-8 flex flex-col gap-4">
+                                           <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground/60 pb-2 border-b border-border/40">
                                                {megaMenu.plans.title}
                                            </h4>
                                            <div className="flex flex-col gap-4">
@@ -184,16 +185,16 @@ const Nav = () => {
                                                        <Link 
                                                            key={pIdx} 
                                                            href={plan.path}
-                                                           className="flex items-start gap-3 group/plan hover:text-primary transition-colors"
+                                                           className="flex items-start gap-3 group/plan hover:text-[var(--tertiary)] transition-colors"
                                                        >
-                                                           <div className="p-2 rounded-lg bg-gray-50 group-hover/plan:bg-primary/5 text-gray-500 group-hover/plan:text-primary transition-colors">
+                                                           <div className="p-2 rounded-lg bg-muted group-hover/plan:bg-[var(--tertiary)]/10 text-muted-foreground group-hover/plan:text-[var(--tertiary)] transition-colors">
                                                                <PlanIcon size={16} />
                                                            </div>
                                                            <div className="flex flex-col">
-                                                               <span className="text-sm font-semibold text-gray-800 group-hover/plan:text-primary">
+                                                               <span className="text-sm font-semibold text-foreground group-hover/plan:text-[var(--tertiary)]">
                                                                    {plan.name}
                                                                </span>
-                                                               <span className="text-xs text-gray-400">
+                                                               <span className="text-xs text-muted-foreground/80">
                                                                    {plan.desc}
                                                                </span>
                                                            </div>
@@ -205,16 +206,16 @@ const Nav = () => {
                                    </div>
 
                                    {/* Bottom Footer Bar */}
-                                   <div className="bg-gray-50/80 border-t border-gray-100 px-8 py-4 flex items-center gap-6">
+                                   <div className="bg-muted/40 border-t border-border/40 px-8 py-4 flex items-center gap-6">
                                        {megaMenu.footer.map((footLink, fIdx) => (
                                            <Link 
                                                key={fIdx} 
                                                href={footLink.path}
-                                               className="text-xs font-medium text-gray-500 hover:text-primary transition-colors flex items-center gap-1.5"
+                                               className="text-xs font-medium text-muted-foreground hover:text-[var(--tertiary)] transition-colors flex items-center gap-1.5"
                                            >
                                                {footLink.name}
                                                {fIdx < megaMenu.footer.length - 1 && (
-                                                   <span className="text-gray-300 ml-4">|</span>
+                                                   <span className="text-muted-foreground/20 ml-4">|</span>
                                                )}
                                            </Link>
                                        ))}
@@ -223,20 +224,20 @@ const Nav = () => {
                            )}
 
                            {/* Standard Sublink Dropdown */}
-                           {!link.hasMega && link.sublinks && (
-                               <div className="absolute top-full left-0 mt-1 w-56 bg-white border border-gray-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-50 flex flex-col p-2 gap-1">
-                                   {link.sublinks.map((sublink, i) => (
-                                       <Link 
-                                            key={i} 
-                                            href={sublink.path}
-                                            className="px-4 py-2.5 hover:bg-gray-50 rounded-lg flex flex-col gap-0.5 transition-colors"
-                                        >
-                                           <span className="text-sm font-semibold text-gray-800 hover:text-primary">{sublink.name}</span>
-                                           {sublink.desc && <span className="text-xs text-gray-400">{sublink.desc}</span>}
-                                       </Link>
-                                   ))}
-                               </div>
-                           )}
+                            {/* {!link.hasMega  && (
+                                <div className="absolute top-full left-0 mt-1 w-56 bg-popover border border-border rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-50 flex flex-col p-2 gap-1">
+                                    {link.sublinks.map((sublink, i) => (
+                                        <Link 
+                                             key={i} 
+                                             href={sublink.path}
+                                             className="px-4 py-2.5 hover:bg-muted rounded-lg flex flex-col gap-0.5 transition-colors"
+                                         >
+                                            <span className="text-sm font-semibold text-foreground hover:text-primary">{sublink.name}</span>
+                                            {sublink.desc && <span className="text-xs text-muted-foreground/80">{sublink.desc}</span>}
+                                        </Link>
+                                    ))}
+                                </div>
+                            )} */}
                        </div>
                    );
                 })}
@@ -249,7 +250,7 @@ const Nav = () => {
                         <Link
                             href={link.path}
                             key={index}
-                            className="capitalize text-sm font-medium transition-all duration-300 hover:text-primary text-muted-foreground"
+                            className="capitalize text-sm font-medium transition-all duration-300 hover:text-[var(--tertiary)] text-muted-foreground"
                         >
                             {link.name}
                         </Link>
