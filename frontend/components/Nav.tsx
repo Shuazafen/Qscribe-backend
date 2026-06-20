@@ -1,8 +1,10 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { usePathname } from "next/navigation";
-import { ChevronDown, User, Zap, Shield, Sparkles, Layout, Globe, BookOpen } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { ChevronDown, User, Zap, Shield, Layout, Globe, BookOpen, LayoutDashboard, LogOut } from "lucide-react";
+import { logout, getCurrentUser, type User as AuthUser } from "@/lib/api";
 
 const links = [
     {
@@ -119,6 +121,20 @@ const solutionsMegaMenu = {
 
 const Nav = () => {
     const path = usePathname();
+    const router = useRouter();
+    const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+
+    // Re-read auth state whenever the route changes (covers post-login redirects)
+    useEffect(() => {
+        setCurrentUser(getCurrentUser());
+    }, [path]);
+
+    function handleLogout() {
+        logout();
+        setCurrentUser(null);
+        router.push("/");
+    }
+
     return (
         <nav className="flex items-center justify-between w-full">
             {/* Left side links (closer to logo) */}
@@ -243,22 +259,46 @@ const Nav = () => {
                 })}
             </div>
 
-            {/* Right side contact & button (far end) */}
+            {/* Right side — auth-aware */}
             <div className="flex items-center gap-6">
-                {contact.map((link, index) => {
-                    return (
+                {currentUser ? (
+                    /* ── Logged-in state ── */
+                    <>
                         <Link
-                            href={link.path}
-                            key={index}
-                            className="capitalize text-sm font-medium transition-all duration-300 hover:text-[var(--tertiary)] text-muted-foreground"
+                            href="/dashboard"
+                            className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-[var(--tertiary)]"
                         >
-                            {link.name}
+                            <LayoutDashboard size={15} />
+                            Dashboard
                         </Link>
-                    )
-                })}
-                <Link href='/signup'>
-                    <Button className="rounded-full px-6 font-medium shadow-sm transition-transform hover:scale-105">Get Started</Button>
-                </Link>
+                        <span className="text-border">|</span>
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-destructive"
+                        >
+                            <LogOut size={15} />
+                            Log out
+                        </button>
+                    </>
+                ) : (
+                    /* ── Logged-out state ── */
+                    <>
+                        {contact.map((link, index) => (
+                            <Link
+                                href={link.path}
+                                key={index}
+                                className="capitalize text-sm font-medium transition-all duration-300 hover:text-[var(--tertiary)] text-muted-foreground"
+                            >
+                                {link.name}
+                            </Link>
+                        ))}
+                        <Link href="/signup">
+                            <Button className="rounded-full px-6 font-medium shadow-sm transition-transform hover:scale-105">
+                                Get Started
+                            </Button>
+                        </Link>
+                    </>
+                )}
             </div>
         </nav>
     );
