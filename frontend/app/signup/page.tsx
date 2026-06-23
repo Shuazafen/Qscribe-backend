@@ -130,9 +130,9 @@ export default function SignupPage() {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center gap-4 text-center">
-          <CheckCircle2 size={56} style={{ color: "#59e184" }} />
-          <h2 className="text-2xl font-bold text-white">Account created!</h2>
-          <p className="text-white/50 text-sm">Redirecting you to your dashboard…</p>
+          <CheckCircle2 size={56} className="text-primary" />
+          <h2 className="text-2xl font-bold text-foreground">Account created!</h2>
+          <p className="text-foreground/50 text-sm">Redirecting you to your dashboard…</p>
         </div>
       </main>
     );
@@ -152,7 +152,7 @@ export default function SignupPage() {
 
       <div className="relative z-10 w-full max-w-lg">
         <div
-          className="rounded-3xl border border-white/10 p-8 sm:p-10 backdrop-blur-md"
+          className="rounded-3xl border border-foreground/10 p-8 sm:p-10 backdrop-blur-md"
           style={{
             background: "rgba(255,255,255,0.03)",
             boxShadow:
@@ -163,12 +163,12 @@ export default function SignupPage() {
           <div className="mb-8 text-center">
             <Link href="/" className="inline-block mb-4">
               <span className="text-3xl font-black tracking-tight">
-                <span className="text-white">Q</span>
-                <span style={{ color: "#59e184" }}>SCRIBE</span>
+                <span className="text-foreground">Q</span>
+                <span className="text-primary">SCRIBE</span>
               </span>
             </Link>
-            <h1 className="text-xl font-bold text-white">Create your account</h1>
-            <p className="mt-1 text-sm text-white/50">
+            <h1 className="text-xl font-bold text-foreground">Create your account</h1>
+            <p className="mt-1 text-sm text-foreground/50">
               Start building better habits today.
             </p>
           </div>
@@ -257,7 +257,7 @@ export default function SignupPage() {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="signup-password"
-                className="text-xs font-semibold uppercase tracking-widest text-white/50"
+                className="text-xs font-semibold uppercase tracking-widest text-foreground/50"
               >
                 Password
               </label>
@@ -286,7 +286,7 @@ export default function SignupPage() {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="signup-confirm-password"
-                className="text-xs font-semibold uppercase tracking-widest text-white/50"
+                className="text-xs font-semibold uppercase tracking-widest text-foreground/50"
               >
                 Confirm Password
               </label>
@@ -313,20 +313,19 @@ export default function SignupPage() {
 
             {/* ID Card Upload */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold uppercase tracking-widest text-white/50">
+              <label className="text-xs font-semibold uppercase tracking-widest text-foreground/50">
                 Student ID Card
               </label>
               <button
                 type="button"
                 id="signup-id-card"
                 onClick={() => fileInputRef.current?.click()}
-                className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-all hover:border-[#59e184]/40 ${
-                  errors.id_card_image
+                className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-all hover:border-[##982598]/40 ${errors.id_card_image
                     ? "border-red-500/60 bg-red-500/5 text-red-400"
                     : idCard
-                    ? "border-[#59e184]/40 bg-[#59e184]/5 text-[#59e184]"
-                    : "border-white/10 bg-white/5 text-white/40"
-                }`}
+                      ? "border-[##982598]/40 bg-[##982598]/5 text-[##982598]"
+                      : "border-foreground/10 bg-foreground/5 text-foreground/40"
+                  }`}
               >
                 <Upload size={16} className="shrink-0" />
                 <span className="truncate">
@@ -350,8 +349,7 @@ export default function SignupPage() {
               id="signup-submit"
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl py-3 font-semibold uppercase tracking-wide text-black transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
-              style={{ background: "#59e184" }}
+              className="w-full rounded-xl py-3 font-semibold uppercase tracking-wide text-black transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 bg-primary"
             >
               {loading ? (
                 <Loader2 size={18} className="animate-spin" />
@@ -361,11 +359,11 @@ export default function SignupPage() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-white/40">
+          <p className="mt-6 text-center text-sm text-foreground/40">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="font-semibold text-[#59e184] hover:underline"
+              className="font-semibold text-[##982598] hover:underline"
             >
               Log in
             </Link>
@@ -379,11 +377,10 @@ export default function SignupPage() {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function inputCls(hasError: boolean) {
-  return `w-full rounded-xl border px-4 py-3 text-sm text-white placeholder-white/20 outline-none transition-all focus:ring-2 focus:ring-[#59e184]/40 ${
-    hasError
+  return `w-full rounded-xl border px-4 py-3 text-sm text-foreground placeholder-white/20 outline-none transition-all focus:ring-2 focus:ring-[##982598]/40 ${hasError
       ? "border-red-500/60 bg-red-500/5"
-      : "border-white/10 bg-white/5 focus:border-[#59e184]/40"
-  }`;
+      : "border-foreground/10 bg-foreground/5 focus:border-[##982598]/40"
+    }`;
 }
 
 function TogglePasswordBtn({
@@ -398,7 +395,7 @@ function TogglePasswordBtn({
       type="button"
       aria-label={show ? "Hide password" : "Show password"}
       onClick={onToggle}
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors"
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/30 hover:text-foreground/70 transition-colors"
     >
       {show ? <EyeOff size={16} /> : <Eye size={16} />}
     </button>
@@ -431,7 +428,7 @@ function Field({
     <div className="flex flex-col gap-1.5">
       <label
         htmlFor={id}
-        className="text-xs font-semibold uppercase tracking-widest text-white/50"
+        className="text-xs font-semibold uppercase tracking-widest text-foreground/50"
       >
         {label}
       </label>

@@ -22,20 +22,20 @@ const Home = () => {
               <span
                 className="inline-block text-xs font-bold uppercase tracking-widest mb-6 px-4 py-1.5 rounded-full border"
                 style={{
-                  color: "#59e184",
-                  borderColor: "rgba(89,225,132,0.35)",
-                  background: "rgba(89,225,132,0.07)",
+                  color: "#E159A2",
+                  borderColor: "rgba(225,89,162,0.35)",
+                  background: "rgba(225,89,162,0.07)",
                 }}
               >
                 Coming soon
               </span>
 
               <h1 className="text-[clamp(4rem,10vw,8rem)] font-black leading-none mb-6 tracking-tight">
-                <span className="text-white">Q</span>
-                <span style={{ color: "#59e184" }}>SCRIBE</span>
+                <span className="text-foreground">Q</span>
+                <span className="text-primary">SCRIBE</span>
               </h1>
 
-              <p className="max-w-[480px] mb-10 text-white/55 text-lg leading-relaxed">
+              <p className="max-w-[480px] mb-10 text-foreground/55 text-lg leading-relaxed">
                 Build lasting habits, track your goals, and unlock AI-powered
                 insights — all in one beautiful workspace.
               </p>
@@ -43,15 +43,14 @@ const Home = () => {
               <div className="flex flex-wrap items-center gap-4">
                 <Button
                   size="lg"
-                  className="rounded-full px-8 font-semibold uppercase tracking-wide shadow-lg hover:scale-105 transition-transform"
-                  style={{ background: "#59e184", color: "#000" }}
+                  className="rounded-full px-8 font-semibold uppercase tracking-wide shadow-lg hover:scale-105 transition-transform bg-secondary text-primary-foreground"
                 >
                   Get Started
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-full px-8 font-semibold uppercase tracking-wide border-white/20 text-white/80 hover:text-white hover:border-white/50 transition-all"
+                  className="rounded-full px-8 font-semibold uppercase tracking-wide border-foreground/20 text-foreground/80 hover:text-foreground hover:border-foreground/50 transition-all"
                 >
                   View Demo
                 </Button>
@@ -65,10 +64,10 @@ const Home = () => {
                   { value: "98%", label: "Retention rate" },
                 ].map((stat) => (
                   <div key={stat.label} className="flex flex-col">
-                    <span className="text-2xl font-black" style={{ color: "#59e184" }}>
+                    <span className="text-2xl font-black text-primary">
                       {stat.value}
                     </span>
-                    <span className="text-xs text-white/40 uppercase tracking-widest">
+                    <span className="text-xs text-foreground/40 uppercase tracking-widest">
                       {stat.label}
                     </span>
                   </div>
@@ -79,14 +78,14 @@ const Home = () => {
             {/* Right visual panel — glowing mock card */}
             <div className="order-1 xl:order-none flex-1 flex justify-center xl:justify-end">
               <div
-                className="relative w-full max-w-sm rounded-3xl border border-white/10 p-8 backdrop-blur-md"
+                className="relative w-full max-w-sm rounded-3xl border border-foreground/10 p-8 backdrop-blur-md"
                 style={{
                   background: "rgba(255,255,255,0.03)",
                   boxShadow: "0 0 80px rgba(89,225,132,0.12), inset 0 0 40px rgba(89,225,132,0.04)",
                 }}
               >
                 {/* Mock habit tracker UI */}
-                <p className="text-xs text-white/30 uppercase tracking-widest mb-5">Today&apos;s habits</p>
+                <p className="text-xs text-foreground/30 uppercase tracking-widest mb-5">Today&apos;s habits</p>
                 {[
                   { label: "Morning run", done: true, pct: 100 },
                   { label: "Deep work block", done: true, pct: 100 },
@@ -95,22 +94,21 @@ const Home = () => {
                 ].map((h) => (
                   <div key={h.label} className="mb-5 last:mb-0">
                     <div className="flex justify-between mb-1.5">
-                      <span className="text-sm font-medium text-white/80">{h.label}</span>
+                      <span className="text-sm font-medium text-foreground/80">{h.label}</span>
                       <span
-                        className="text-xs font-bold"
-                        style={{ color: h.done ? "#59e184" : "rgba(255,255,255,0.3)" }}
+                        className={`text-xs font-bold ${h.done ? "text-primary" : "text-foreground/30"}`}
                       >
                         {h.done ? "✓ Done" : `${h.pct}%`}
                       </span>
                     </div>
-                    <div className="w-full h-1.5 rounded-full bg-white/10">
+                    <div className="w-full h-1.5 rounded-full bg-foreground/10">
                       <div
                         className="h-full rounded-full transition-all duration-700"
                         style={{
                           width: `${h.pct}%`,
                           background: h.done
-                            ? "#59e184"
-                            : "linear-gradient(to right, #59e184aa, #59e18455)",
+                            ? "#982598"
+                            : "linear-gradient(to right, #982598aa, #98259855)",
                         }}
                       />
                     </div>
@@ -119,13 +117,12 @@ const Home = () => {
 
                 {/* Streak badge */}
                 <div
-                  className="mt-7 flex items-center gap-3 rounded-2xl p-4 border border-[#59e184]/20"
-                  style={{ background: "rgba(89,225,132,0.06)" }}
+                  className="mt-7 flex items-center gap-3 rounded-2xl p-4 border border-[##982598]/20 bg-primary/10"
                 >
                   <span className="text-3xl">🔥</span>
                   <div>
-                    <p className="text-sm font-bold text-white">14-day streak</p>
-                    <p className="text-xs text-white/40">Keep it up — you&apos;re on fire!</p>
+                    <p className="text-sm font-bold text-foreground">14-day streak</p>
+                    <p className="text-xs text-foreground/40">Keep it up — you&apos;re on fire!</p>
                   </div>
                 </div>
               </div>
@@ -136,11 +133,7 @@ const Home = () => {
 
         {/* Bottom fade into page */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
-          style={{
-            background: "linear-gradient(to bottom, transparent, var(--background))",
-            zIndex: 5,
-          }}
+          className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none z-[5] bg-gradient-to-b from-transparent to-background"
         />
       </section>
 

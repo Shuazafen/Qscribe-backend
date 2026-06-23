@@ -107,7 +107,7 @@ function AuroraBlobs() {
           height: "55vw",
           top: "-18vw",
           left: "-18vw",
-          background: "radial-gradient(circle, rgba(89,225,132,0.13) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(152, 37, 152, 0.13) 0%, transparent 70%)",
           animationDelay: "0s",
           animationDuration: "14s",
         }}
@@ -120,7 +120,7 @@ function AuroraBlobs() {
           height: "45vw",
           top: "10vh",
           right: "-12vw",
-          background: "radial-gradient(circle, rgba(89,225,132,0.07) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(152, 37, 152, 0.07) 0%, transparent 70%)",
           animationDelay: "-5s",
           animationDuration: "18s",
         }}
@@ -133,7 +133,7 @@ function AuroraBlobs() {
           height: "30vw",
           bottom: "-5vw",
           left: "20vw",
-          background: "radial-gradient(ellipse, rgba(89,225,132,0.05) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse, rgba(152, 37, 152, 0.05) 0%, transparent 70%)",
           animationDelay: "-9s",
           animationDuration: "22s",
         }}
@@ -144,7 +144,7 @@ function AuroraBlobs() {
         className="absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(circle, rgba(89,225,132,0.18) 1px, transparent 1px)",
+            "radial-gradient(circle, rgba(152, 37, 152, 0.18) 1px, transparent 1px)",
           backgroundSize: "40px 40px",
           maskImage:
             "radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%)",

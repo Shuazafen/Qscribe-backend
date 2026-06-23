@@ -157,8 +157,7 @@ const Nav = () => {
                                     <ChevronDown size={14} className="transition-transform duration-300 group-hover:rotate-180" />
                                 )}
                                 <span
-                                    style={{ backgroundColor: 'var(--tertiary)' }}
-                                    className={`absolute -bottom-1 left-0 h-[2px] transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"}`}
+                                    className={`bg-primary ${`absolute -bottom-1 left-0 h-[2px] transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"}`}`}
                                 ></span>
                             </Link>
                            

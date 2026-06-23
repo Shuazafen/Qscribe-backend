@@ -66,7 +66,7 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-md">
         {/* Card */}
         <div
-          className="rounded-3xl border border-white/10 p-8 sm:p-10 backdrop-blur-md"
+          className="rounded-3xl border border-foreground/10 p-8 sm:p-10 backdrop-blur-md"
           style={{
             background: "rgba(255,255,255,0.03)",
             boxShadow:
@@ -77,12 +77,12 @@ export default function LoginPage() {
           <div className="mb-8 text-center">
             <Link href="/" className="inline-block mb-4">
               <span className="text-3xl font-black tracking-tight">
-                <span className="text-white">Q</span>
-                <span style={{ color: "#59e184" }}>SCRIBE</span>
+                <span className="text-foreground">Q</span>
+                <span className="text-primary">SCRIBE</span>
               </span>
             </Link>
-            <h1 className="text-xl font-bold text-white">Welcome back</h1>
-            <p className="mt-1 text-sm text-white/50">
+            <h1 className="text-xl font-bold text-foreground">Welcome back</h1>
+            <p className="mt-1 text-sm text-foreground/50">
               Log in to continue your journey.
             </p>
           </div>
@@ -100,7 +100,7 @@ export default function LoginPage() {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="login-username"
-                className="text-xs font-semibold uppercase tracking-widest text-white/50"
+                className="text-xs font-semibold uppercase tracking-widest text-foreground/50"
               >
                 Username
               </label>
@@ -112,11 +112,10 @@ export default function LoginPage() {
                 value={form.username}
                 onChange={handleChange}
                 placeholder="your_username"
-                className={`w-full rounded-xl border px-4 py-3 text-sm text-white placeholder-white/20 outline-none transition-all focus:ring-2 focus:ring-[#59e184]/40 ${
-                  errors.username
+                className={`w-full rounded-xl border px-4 py-3 text-sm text-foreground placeholder-white/20 outline-none transition-all focus:ring-2 focus:ring-[##982598]/40 ${errors.username
                     ? "border-red-500/60 bg-red-500/5"
-                    : "border-white/10 bg-white/5 focus:border-[#59e184]/40"
-                }`}
+                    : "border-foreground/10 bg-foreground/5 focus:border-[##982598]/40"
+                  }`}
               />
               {errors.username && (
                 <p className="text-xs text-red-400">{errors.username}</p>
@@ -127,7 +126,7 @@ export default function LoginPage() {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="login-password"
-                className="text-xs font-semibold uppercase tracking-widest text-white/50"
+                className="text-xs font-semibold uppercase tracking-widest text-foreground/50"
               >
                 Password
               </label>
@@ -140,17 +139,16 @@ export default function LoginPage() {
                   value={form.password}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className={`w-full rounded-xl border px-4 py-3 pr-11 text-sm text-white placeholder-white/20 outline-none transition-all focus:ring-2 focus:ring-[#59e184]/40 ${
-                    errors.password
+                  className={`w-full rounded-xl border px-4 py-3 pr-11 text-sm text-foreground placeholder-white/20 outline-none transition-all focus:ring-2 focus:ring-[##982598]/40 ${errors.password
                       ? "border-red-500/60 bg-red-500/5"
-                      : "border-white/10 bg-white/5 focus:border-[#59e184]/40"
-                  }`}
+                      : "border-foreground/10 bg-foreground/5 focus:border-[##982598]/40"
+                    }`}
                 />
                 <button
                   type="button"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   onClick={() => setShowPassword((s) => !s)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/30 hover:text-foreground/70 transition-colors"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -164,7 +162,7 @@ export default function LoginPage() {
             <div className="flex justify-end">
               <Link
                 href="/forgot-password"
-                className="text-xs text-white/40 hover:text-[#59e184] transition-colors"
+                className="text-xs text-foreground/40 hover:text-[##982598] transition-colors"
               >
                 Forgot password?
               </Link>
@@ -175,8 +173,7 @@ export default function LoginPage() {
               id="login-submit"
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl py-3 font-semibold uppercase tracking-wide text-black transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
-              style={{ background: "#59e184" }}
+              className="w-full rounded-xl py-3 font-semibold uppercase tracking-wide text-black transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 bg-primary"
             >
               {loading ? (
                 <Loader2 size={18} className="animate-spin" />
@@ -187,11 +184,11 @@ export default function LoginPage() {
           </form>
 
           {/* Footer */}
-          <p className="mt-6 text-center text-sm text-white/40">
+          <p className="mt-6 text-center text-sm text-foreground/40">
             Don&apos;t have an account?{" "}
             <Link
               href="/signup"
-              className="font-semibold text-[#59e184] hover:underline"
+              className="font-semibold text-[##982598] hover:underline"
             >
               Sign up
             </Link>

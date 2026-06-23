@@ -61,7 +61,7 @@ export interface AuthResponse {
 }
 
 export interface ApiError {
-  [key: string]: string | string[];
+  [key: string]: string | string[] | undefined;
 }
 
 // ─── Core fetch wrapper ───────────────────────────────────────────────────────
