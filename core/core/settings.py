@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 from django.templatetags.static import static
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -94,6 +95,24 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
+CORS_ALLOWED_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+] 
+
+CORS_ALLOW_HEADERS = (
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+)
+
 ROOT_URLCONF = 'core.core.urls'
 
 TEMPLATES = [
@@ -148,6 +167,27 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+
+# Email reset settings
+
+# Brevo (Sendinblue) SMTP Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp-relay.brevo.com' # Brevo's SMTP host
+EMAIL_PORT = 587                    # Brevo's SMTP port (587 for TLS, 465 for SSL)
+EMAIL_USE_TLS = True                # Use TLS for encryption
+EMAIL_HOST_USER = os.getenv('BREVO_SMTP_LOGIN') # Your Brevo SMTP login (often your Brevo email)
+EMAIL_HOST_PASSWORD = os.getenv('BREVO_SMTP') # Your Brevo SMTP key (the auto-generated password)
+BREVO_API_KEY = os.getenv('Brevo_API')
+
+# Brevo template IDs
+BREVO_WELCOME_TEMPLATE_ID = 1          # Template sent on user registration
+BREVO_PASSWORD_RESET_TEMPLATE_ID = 2   # Template sent on password reset
+
+# Email / support config
+LOGIN_URL = '/login/'
+SUPPORT_EMAIL = 'support@qscribe.com'
 
 
 # Internationalization
