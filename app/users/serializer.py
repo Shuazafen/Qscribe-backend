@@ -6,7 +6,9 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
         extra_kwargs = {
-            'password': {'write_only': True}
+            'password': {'write_only': True},
+            'monthly_income': {'required': False, 'allow_null': True},
+            'auto_save_percentage': {'required': False, 'allow_null': True},
         }
 
     def create(self, validated_data):

@@ -1,5 +1,5 @@
 import sib_api_v3_sdk
-from sib_api_v3_sdk import ApiException
+from sib_api_v3_sdk.rest import ApiException
 from django.conf import settings
 import logging
 
@@ -29,7 +29,7 @@ class EmailService:
                 html_content="<p>This is a test email.</p>"
             )
 
-            api_response = api_instance.send_transacemail(send_smtp_email)
+            api_response = api_instance.send_transac_email(send_smtp_email)
             return api_response
         except ApiException as e:
             return f"Error sending email: {e}"
@@ -63,7 +63,7 @@ class EmailService:
                     html_content=html_content
                 )
 
-            api_response = api_instance.send_transacemail(send_smtp_email)
+            api_response = api_instance.send_transac_email(send_smtp_email)
             return api_response
         except ApiException as e:
             return f"Error sending email: {e}"

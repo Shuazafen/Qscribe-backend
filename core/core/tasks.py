@@ -1,7 +1,7 @@
 from celery import shared_task
 from django.conf import settings
 import sib_api_v3_sdk
-from sib_api_v3_sdk import ApiException
+from sib_api_v3_sdk.rest import ApiException
 import logging
 
 logger = logging.getLogger(__name__)

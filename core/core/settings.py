@@ -179,7 +179,7 @@ EMAIL_PORT = 587                    # Brevo's SMTP port (587 for TLS, 465 for SS
 EMAIL_USE_TLS = True                # Use TLS for encryption
 EMAIL_HOST_USER = os.getenv('BREVO_SMTP_LOGIN') # Your Brevo SMTP login (often your Brevo email)
 EMAIL_HOST_PASSWORD = os.getenv('BREVO_SMTP') # Your Brevo SMTP key (the auto-generated password)
-BREVO_API_KEY = os.getenv('Brevo_API')
+BREVO_API_KEY = os.getenv('BREVO_API_KEY')
 
 # Brevo template IDs
 BREVO_WELCOME_TEMPLATE_ID = 1          # Template sent on user registration
@@ -422,6 +422,9 @@ TIER2_MAX_DEPOSIT_AMOUNT = 300_000
 
 # Monthly interest rate (%) automatically applied to Tier 3 users' saving goals.
 TIER3_SAVING_INTEREST_RATE = 3.0
+
+# Default auto‑save percentage of monthly income (can be overridden per user)
+DEFAULT_AUTO_SAVE_PERCENTAGE = 10.0
 
 # Celery Beat schedule for applying Tier 3 savings interest monthly
 from celery.schedules import crontab

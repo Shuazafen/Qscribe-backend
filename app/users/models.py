@@ -12,6 +12,8 @@ class User(AbstractUser):
 
     phone_number = models.CharField(max_length=15, unique=True)
     tier = models.IntegerField(choices=TIER_CHOICES, default=1)
+    monthly_income = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    auto_save_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     university = models.CharField(max_length=100)
     id_card_image = models.ImageField(upload_to='id_card_images')
     

@@ -2,6 +2,7 @@ from rest_framework import generics
 from app.users.permissions import IsTier1, IsOwner
 from .models import Saving
 from .serializers import SavingSerializer
+from .services import calculate_auto_save_amount
 
 
 class SavingListCreateView(generics.ListCreateAPIView):
