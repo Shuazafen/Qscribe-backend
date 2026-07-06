@@ -73,12 +73,39 @@ class BrevoEmailService:
 @shared_task(bind=True, max_retries=3)
 def send_welcome_email(self, user_email, username, first_name=None):
     """
-    Send welcome email using Brevo template
+    Send welcome email using Brevo template and add the user to contact list 1.
     """
+    logger.info(f"[Task:send_welcome_email] Starting for user_email={user_email} username={username}")
     try:
         service = BrevoEmailService()
         
-        # Get template ID from settings
+        # 1. Add user to Brevo contact list
+        try:
+            # We configure ContactsApi using same config
+            contacts_api = sib_api_v3_sdk.ContactsApi(service.api_client)
+            
+            # Create or update contact and add to list 1 (default)
+            list_id = getattr(settings, 'BREVO_DEFAULT_LIST_ID', 1)
+            create_contact = sib_api_v3_sdk.CreateContact(
+                email=user_email,
+                attributes={
+                    "FNAME": first_name or username,
+                },
+                list_ids=[list_id],
+                update_enabled=True
+            )
+            
+            logger.info(f"[Task:send_welcome_email] Adding/updating contact {user_email} in list {list_id}")
+            contacts_api.create_contact(create_contact)
+            logger.info(f"[Task:send_welcome_email] Successfully added contact {user_email} to list {list_id}")
+            
+        except ApiException as ce:
+            logger.warning(f"[Task:send_welcome_email] Brevo Contact API warning/error: {ce}")
+            # Do not block the welcome email task if adding to list fails, but we note it.
+        except Exception as e:
+            logger.warning(f"[Task:send_welcome_email] General contact creation exception: {e}")
+
+        # 2. Get template ID from settings
         template_id = settings.BREVO_WELCOME_TEMPLATE_ID
         
         # Prepare template parameters
@@ -98,9 +125,11 @@ def send_welcome_email(self, user_email, username, first_name=None):
         )
         
         if result:
+            logger.info(f"[Task:send_welcome_email] Success for user_email={user_email}")
             return {"status": "success", "email": user_email}
         else:
             # Retry if failed
+            logger.warning(f"[Task:send_welcome_email] Send email failed. Retrying in 5 minutes...")
             self.retry(countdown=60 * 5)  # Retry after 5 minutes
             
     except Exception as e:

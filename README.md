@@ -1,40 +1,114 @@
-# Qscribe-backend
-fintech savings and habits building for university students &amp; first time earners
+# Qscribe Backend
+> **Fintech Savings & Habit-Building for University Students & First-Time Earners**
 
-i will be building the backend for this project using drf(django rest framework), postgresql as the database, redis for caching and message queue and celery for background tasks
+Qscribe is a backend service providing secure personal finance tools, goal-oriented savings, and habit-tracking features tailored for university students and early-career earners. 
 
-## Project Structure
+The architecture is built with **Django REST Framework (DRF)**, **PostgreSQL** (production data store) / **SQLite** (development local store), **Redis** (caching and asynchronous message broker), and **Celery** (asynchronous background jobs & cron scheduling).
 
+---
+
+## 🔑 Verification Tiers & Permissions
+
+To maintain compliance and manage financial risk, users progress through verification tiers. Each tier unlocks additional platform features:
+
+| Verification Tier | Requirements | Features Unlocked |
+|:---|:---|:---|
+| **Tier 1** *(Registered)* | Phone number, University verification, Student ID Card Image upload | Access basic profiles, list & create saving goals. |
+| **Tier 2** *(Verified ID)* | Tier 1 criteria + National Identification Number (NIN) + Facial Recognition Image | Standard deposit limits, auto-save recommendations (based on monthly income). |
+| **Tier 3** *(Premium)* | Tier 2 criteria + Bank Verification Number (BVN) + Address verification | **Limitless deposits**, access to rare pets, **3.0% monthly interest rate** applied automatically to active savings goals. |
+
+---
+
+## 📧 Email & Marketing Integrations (Brevo)
+
+Qscribe integrates with **Brevo (formerly Sendinblue)** for handling messaging workflows asynchronously:
+
+1. **Transactional Email Flow:**
+   - On registration, a welcome email template (`BREVO_WELCOME_TEMPLATE_ID`) is queued using Celery to send via Brevo.
+   - Password reset links use template `BREVO_PASSWORD_RESET_TEMPLATE_ID`.
+2. **Contact Marketing Integration:**
+   - Registration triggers a call to Brevo's **Contacts API** adding/updating the user in **Contact List 1** (our primary mailing cohort). This list ID can be customized using `BREVO_DEFAULT_LIST_ID` in settings.
+   - Contact list updates are non-blocking; issues contacting the marketing API will log warnings but won't interrupt critical user registration or welcome email delivery.
+
+---
+
+## 🕒 Background Jobs & Automated Tasks
+
+We use **Celery** to manage long-running or periodic background processing:
+- **`send_welcome_email`**: Contacts Brevo API asynchronously on sign-up to update lists and deliver templates.
+- **`send_password_reset_email`**: Dispatches secure links when requested.
+- **`apply_tier3_interest`** *(Periodic)*: Runs automatically on the 1st of every month at midnight. Calculates and applies the 3.0% interest rate to active, incomplete saving goals for all Tier 3 verified users.
+
+---
+
+## 📝 Structured Logging Config
+
+To simplify debugging, Qscribe uses standard Python logging routed to both standard output and a rotating file handler at `logs/qscribe.log`:
+- **File Rotation:** Rotates automatically at 5MB, maintaining up to 5 historical log backups.
+- **Format:** `{timestamp} [{levelname}] {logger_name} — {message}`
+- **Loggers Configured:** 
+  - `app.savings.serializers` (validation & creation tracing)
+  - `app.savings.services` (auto-save calculation logic)
+  - `app.savings.tasks` (monthly interest calculations)
+  - `app.users.views` (registration & tier upgrade traces)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+- Python 3.12+
+- Redis (installed and running locally on `redis://localhost:6379/0`)
+
+### 2. Installation & Setup
+Clone the repository, set up the virtual environment, and install dependencies:
+```bash
+python -m venv env
+env\Scripts\activate
+pip install -r requirements.txt
 ```
-Qscribe-backend/
-├── apps/
-│   ├── users/
-│   ├── savings/
-│   ├── habits/
-│   ├── notifications/
-│   ├── transactions/
-|   ├── webhooks/
-|   └── pets/
-├── core/
-├── config/
-├── requirements.txt
-├── manage.py
-└── README.md
+
+Create a `.env` file in the root directory:
+```env
+BREVO_API_KEY=your_brevo_api_key
+BREVO_SMTP_LOGIN=your_smtp_username
+BREVO_SMTP=your_smtp_password
 ```
 
-in this stage we would be focusing on the the users saving habits & goals 
+### 3. Running Database Migrations
+```bash
+python manage.py migrate
+```
 
-the proposed user data includes first name, last name, email, password, phone number, nin, bvn, university, facial-recognition-image, id-card-image, etc.
+### 4. Running the Development Server
+```bash
+python manage.py runserver
+```
 
-there will different stages of user verification
-1. email verification
-2. phone number verification
-3. facial recognition verification
-4. id card verification
-5. bvn verification
-6. nin verification
+### 5. Running the Celery Worker
+Ensure Redis is running, then start the worker:
+```bash
+celery -A core.core worker --loglevel=info
+```
 
-end of first input 
+For periodic interest tasks, start the scheduler in another terminal:
+```bash
+celery -A core.core beat --loglevel=info
+```
 
-second input 
-introduction to tier list and permission, restructure of savings and transactions app 
+---
+
+## 🧪 Testing
+
+We use Django's test framework. Tests mock external Brevo API calls to run reliably offline.
+
+Run all tests:
+```bash
+python manage.py test
+```
+
+Or run modules individually:
+```bash
+python manage.py test app.users.tests
+python manage.py test app.savings.tests
+```

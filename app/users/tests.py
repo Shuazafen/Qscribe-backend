@@ -238,3 +238,78 @@ class UpgradeToTier3ViewTests(TestCase):
     def test_unauthenticated_request_is_rejected(self):
         response = APIClient().post(self.url, data={}, format="json")
         self.assertIn(response.status_code, [status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN])
+
+
+# ---------------------------------------------------------------------------
+# Brevo Email & Contact List Integration Tests
+# ---------------------------------------------------------------------------
+from unittest.mock import patch, MagicMock
+
+class BrevoIntegrationTests(TestCase):
+    """
+    Tests for welcome email sending tasks and integration with Brevo Contact List 1.
+    """
+
+    @patch('sib_api_v3_sdk.ContactsApi')
+    @patch('core.core.tasks.BrevoEmailService.send_template_email')
+    def test_send_welcome_email_adds_to_list_and_sends_email(self, mock_send_email, mock_contacts_api_class):
+        """
+        Confirm that send_welcome_email calls the ContactsApi to add/update
+        the user on list 1, and calls send_template_email to deliver the welcome mail.
+        """
+        # Arrange mock instances
+        mock_contacts_api = MagicMock()
+        mock_contacts_api_class.return_value = mock_contacts_api
+        mock_send_email.return_value = {"message_id": "test-msg-id"}
+
+        # Act: invoke the task synchronously (using .apply or directly)
+        from core.core.tasks import send_welcome_email
+        send_welcome_email(
+            user_email="student@unilag.edu",
+            username="unilag_student",
+            first_name="Daniel"
+        )
+
+        # Assert: check ContactsApi was instantiated and called to add to list 1
+        mock_contacts_api_class.assert_called_once()
+        mock_contacts_api.create_contact.assert_called_once()
+        create_contact_call_arg = mock_contacts_api.create_contact.call_args[0][0]
+        
+        self.assertEqual(create_contact_call_arg.email, "student@unilag.edu")
+        self.assertEqual(create_contact_call_arg.list_ids, [1])
+        self.assertEqual(create_contact_call_arg.attributes["FNAME"], "Daniel")
+        self.assertTrue(create_contact_call_arg.update_enabled)
+
+        # Assert: check TransactionalEmail send_template_email was called with correct parameters
+        mock_send_email.assert_called_once()
+        call_kwargs = mock_send_email.call_args[1]
+        self.assertEqual(call_kwargs["to_email"], "student@unilag.edu")
+        self.assertEqual(call_kwargs["template_id"], 1) # Welcomes template defaults to 1
+        self.assertEqual(call_kwargs["params"]["username"], "unilag_student")
+        self.assertEqual(call_kwargs["params"]["first_name"], "Daniel")
+
+    @patch('sib_api_v3_sdk.ContactsApi')
+    @patch('core.core.tasks.BrevoEmailService.send_template_email')
+    def test_contact_list_failure_does_not_block_email_delivery(self, mock_send_email, mock_contacts_api_class):
+        """
+        If adding to the Brevo contact list raises an ApiException, the task
+        should log the issue but still proceed to send the welcome email successfully.
+        """
+        # Arrange ContactsApi to raise ApiException
+        from sib_api_v3_sdk.rest import ApiException
+        mock_contacts_api = MagicMock()
+        mock_contacts_api.create_contact.side_effect = ApiException(status=400, reason="Bad Request")
+        mock_contacts_api_class.return_value = mock_contacts_api
+        mock_send_email.return_value = {"message_id": "test-msg-id"}
+
+        from core.core.tasks import send_welcome_email
+        result = send_welcome_email(
+            user_email="failed_list@example.com",
+            username="failed_user",
+            first_name="Failed"
+        )
+
+        # Assert email was still sent
+        mock_send_email.assert_called_once()
+        self.assertEqual(result["status"], "success")
+        self.assertEqual(result["email"], "failed_list@example.com")
