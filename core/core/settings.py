@@ -435,3 +435,93 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(hour=0, minute=0, day_of_month=1),
     },
 }
+
+# ──────────────────────────────────────────────
+# Logging
+# ──────────────────────────────────────────────
+
+LOGS_DIR = BASE_DIR / 'logs'
+LOGS_DIR.mkdir(exist_ok=True)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    # ── Formatters ─────────────────────────────────────────────────────────
+    'formatters': {
+        'verbose': {
+            # timestamp | level | logger name | message
+            'format': '{asctime} [{levelname}] {name} — {message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+        'simple': {
+            'format': '[{levelname}] {message}',
+            'style': '{',
+        },
+    },
+
+    # ── Handlers ───────────────────────────────────────────────────────────
+    'handlers': {
+        # Coloured console output (DEBUG and above in development)
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+            'level': 'DEBUG',
+        },
+        # Rotating file — keeps 5 × 5 MB files in logs/qscribe.log
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOGS_DIR / 'qscribe.log',
+            'maxBytes': 5 * 1024 * 1024,   # 5 MB
+            'backupCount': 5,
+            'formatter': 'verbose',
+            'level': 'DEBUG',
+            'encoding': 'utf-8',
+        },
+    },
+
+    # ── App loggers (map to getLogger() names used in each module) ─────────
+    'loggers': {
+        # Savings
+        'app.savings.serializers': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'app.savings.services': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'app.savings.tasks': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        # Users
+        'app.users.views': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        # Catch-all for any other app.* logger not listed above
+        'app': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        # Django internals — only warnings+ to avoid noise
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+    },
+
+    # ── Root logger (fallback for everything not matched above) ────────────
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+}

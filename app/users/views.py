@@ -1,3 +1,4 @@
+import logging
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -10,6 +11,8 @@ from rest_framework_simplejwt.views import (
 )
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+
+logger = logging.getLogger('app.users.views')
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -38,8 +41,16 @@ class UpgradeToTier2View(APIView):
 
     def post(self, request):
         user = request.user
+        logger.info(
+            "[UpgradeTier2] Request received | user=%s (id=%s) current_tier=%s",
+            user.username, user.pk, user.tier,
+        )
 
         if user.tier >= 2:
+            logger.warning(
+                "[UpgradeTier2] Rejected — already Tier 2+ | user=%s (id=%s) tier=%s",
+                user.username, user.pk, user.tier,
+            )
             return Response(
                 {"detail": "You are already Tier 2 or above."},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -48,6 +59,11 @@ class UpgradeToTier2View(APIView):
         nin = request.data.get('nin')
         facial_image = request.FILES.get('facial_recognition_image')
 
+        logger.debug(
+            "[UpgradeTier2] Fields received | user=%s (id=%s) nin_provided=%s facial_image_provided=%s",
+            user.username, user.pk, bool(nin), bool(facial_image),
+        )
+
         errors = {}
         if not nin:
             errors['nin'] = "NIN is required to upgrade to Tier 2."
@@ -55,6 +71,10 @@ class UpgradeToTier2View(APIView):
             errors['facial_recognition_image'] = "A facial recognition image is required to upgrade to Tier 2."
 
         if errors:
+            logger.warning(
+                "[UpgradeTier2] Validation failed | user=%s (id=%s) missing_fields=%s",
+                user.username, user.pk, list(errors.keys()),
+            )
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
         user.nin = nin
@@ -62,6 +82,10 @@ class UpgradeToTier2View(APIView):
         user.tier = 2
         user.save()
 
+        logger.info(
+            "[UpgradeTier2] Success — upgraded to Tier 2 | user=%s (id=%s) nin=%s",
+            user.username, user.pk, nin,
+        )
         return Response(
             {
                 "detail": "Congratulations! You have been upgraded to Tier 2.",
@@ -81,8 +105,16 @@ class UpgradeToTier3View(APIView):
 
     def post(self, request):
         user = request.user
+        logger.info(
+            "[UpgradeTier3] Request received | user=%s (id=%s) current_tier=%s",
+            user.username, user.pk, user.tier,
+        )
 
         if user.tier >= 3:
+            logger.warning(
+                "[UpgradeTier3] Rejected — already Tier 3 | user=%s (id=%s)",
+                user.username, user.pk,
+            )
             return Response(
                 {"detail": "You are already Tier 3."},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -91,6 +123,11 @@ class UpgradeToTier3View(APIView):
         bvn = request.data.get('bvn')
         address = request.data.get('address')
 
+        logger.debug(
+            "[UpgradeTier3] Fields received | user=%s (id=%s) bvn_provided=%s address_provided=%s",
+            user.username, user.pk, bool(bvn), bool(address),
+        )
+
         errors = {}
         if not bvn:
             errors['bvn'] = "BVN is required to upgrade to Tier 3."
@@ -98,6 +135,10 @@ class UpgradeToTier3View(APIView):
             errors['address'] = "Address is required to upgrade to Tier 3."
 
         if errors:
+            logger.warning(
+                "[UpgradeTier3] Validation failed | user=%s (id=%s) missing_fields=%s",
+                user.username, user.pk, list(errors.keys()),
+            )
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
         user.bvn = bvn
@@ -105,6 +146,10 @@ class UpgradeToTier3View(APIView):
         user.tier = 3
         user.save()
 
+        logger.info(
+            "[UpgradeTier3] Success — upgraded to Tier 3 | user=%s (id=%s)",
+            user.username, user.pk,
+        )
         return Response(
             {
                 "detail": (
