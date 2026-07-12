@@ -320,10 +320,10 @@ export default function SignupPage() {
                 type="button"
                 id="signup-id-card"
                 onClick={() => fileInputRef.current?.click()}
-                className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-all hover:border-[##982598]/40 ${errors.id_card_image
+                className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-all duration-200 hover:border-secondary/40 ${errors.id_card_image
                     ? "border-red-500/60 bg-red-500/5 text-red-400"
                     : idCard
-                      ? "border-[##982598]/40 bg-[##982598]/5 text-[##982598]"
+                      ? "border-secondary/40 bg-secondary/5 text-secondary"
                       : "border-foreground/10 bg-foreground/5 text-foreground/40"
                   }`}
               >
@@ -349,7 +349,7 @@ export default function SignupPage() {
               id="signup-submit"
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl py-3 font-semibold uppercase tracking-wide text-black transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 bg-primary"
+              className="w-full rounded-xl py-3 font-semibold uppercase tracking-wide text-black transition-all duration-200 hover:scale-[1.02] active:scale-[0.97] disabled:opacity-60 bg-primary"
             >
               {loading ? (
                 <Loader2 size={18} className="animate-spin" />
@@ -362,9 +362,8 @@ export default function SignupPage() {
           <p className="mt-6 text-center text-sm text-foreground/40">
             Already have an account?{" "}
             <Link
-              href="/login"
-              className="font-semibold text-[##982598] hover:underline"
-            >
+              href="/login"            className="font-semibold text-secondary hover:underline"
+          >
               Log in
             </Link>
           </p>
@@ -377,9 +376,9 @@ export default function SignupPage() {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function inputCls(hasError: boolean) {
-  return `w-full rounded-xl border px-4 py-3 text-sm text-foreground placeholder-white/20 outline-none transition-all focus:ring-2 focus:ring-[##982598]/40 ${hasError
+  return `w-full rounded-xl border px-4 py-3 text-sm text-foreground placeholder-white/20 outline-none input-focus-ring ${hasError
       ? "border-red-500/60 bg-red-500/5"
-      : "border-foreground/10 bg-foreground/5 focus:border-[##982598]/40"
+      : "border-foreground/10 bg-foreground/5"
     }`;
 }
 

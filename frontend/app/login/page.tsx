@@ -112,9 +112,9 @@ export default function LoginPage() {
                 value={form.username}
                 onChange={handleChange}
                 placeholder="your_username"
-                className={`w-full rounded-xl border px-4 py-3 text-sm text-foreground placeholder-white/20 outline-none transition-all focus:ring-2 focus:ring-[##982598]/40 ${errors.username
+                className={`w-full rounded-xl border px-4 py-3 text-sm text-foreground placeholder-white/20 outline-none input-focus-ring ${errors.username
                     ? "border-red-500/60 bg-red-500/5"
-                    : "border-foreground/10 bg-foreground/5 focus:border-[##982598]/40"
+                    : "border-foreground/10 bg-foreground/5"
                   }`}
               />
               {errors.username && (
@@ -139,9 +139,9 @@ export default function LoginPage() {
                   value={form.password}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className={`w-full rounded-xl border px-4 py-3 pr-11 text-sm text-foreground placeholder-white/20 outline-none transition-all focus:ring-2 focus:ring-[##982598]/40 ${errors.password
+                  className={`w-full rounded-xl border px-4 py-3 pr-11 text-sm text-foreground placeholder-white/20 outline-none input-focus-ring ${errors.password
                       ? "border-red-500/60 bg-red-500/5"
-                      : "border-foreground/10 bg-foreground/5 focus:border-[##982598]/40"
+                      : "border-foreground/10 bg-foreground/5"
                     }`}
                 />
                 <button
@@ -160,10 +160,10 @@ export default function LoginPage() {
 
             {/* Forgot password */}
             <div className="flex justify-end">
-              <Link
-                href="/forgot-password"
-                className="text-xs text-foreground/40 hover:text-[##982598] transition-colors"
-              >
+          <Link
+            href="/forgot-password"
+            className="text-xs text-foreground/40 hover:text-secondary transition-colors"
+          >
                 Forgot password?
               </Link>
             </div>
@@ -173,7 +173,7 @@ export default function LoginPage() {
               id="login-submit"
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl py-3 font-semibold uppercase tracking-wide text-black transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 bg-primary"
+              className="w-full rounded-xl py-3 font-semibold uppercase tracking-wide text-black transition-all duration-200 hover:scale-[1.02] active:scale-[0.97] disabled:opacity-60 bg-primary"
             >
               {loading ? (
                 <Loader2 size={18} className="animate-spin" />
@@ -187,9 +187,8 @@ export default function LoginPage() {
           <p className="mt-6 text-center text-sm text-foreground/40">
             Don&apos;t have an account?{" "}
             <Link
-              href="/signup"
-              className="font-semibold text-[##982598] hover:underline"
-            >
+              href="/signup"            className="font-semibold text-secondary hover:underline"
+          >
               Sign up
             </Link>
           </p>
